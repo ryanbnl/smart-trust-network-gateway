@@ -100,12 +100,12 @@ class SignerCertificateIntegrationTest {
             .buildAsString();
 
         // immediately parse the message to get the signature from the signed message
-        String signature = new SignedCertificateMessageParser(payload).getSignature();
+        String signature = new SignedCertificateMessageParser(payload).getDetachedSignature();
 
         String authCertHash =
             trustedPartyTestHelper.getHash(TrustedPartyEntity.CertificateType.AUTHENTICATION, countryCode);
 
-        mockMvc.perform(post("/signerCertificate/")
+        mockMvc.perform(post("/signerCertificate")
                 .content(payload)
                 .contentType("application/cms")
                 .header(dgcConfigProperties.getCertAuth().getHeaderFields().getThumbprint(), authCertHash)
@@ -156,7 +156,7 @@ class SignerCertificateIntegrationTest {
         String authCertHash =
             trustedPartyTestHelper.getHash(TrustedPartyEntity.CertificateType.AUTHENTICATION, countryCode);
 
-        mockMvc.perform(post("/signerCertificate/")
+        mockMvc.perform(post("/signerCertificate")
                 .content(payload)
                 .contentType("application/cms")
                 .header(dgcConfigProperties.getCertAuth().getHeaderFields().getThumbprint(), authCertHash)
@@ -164,7 +164,7 @@ class SignerCertificateIntegrationTest {
             )
             .andExpect(status().isCreated());
 
-        mockMvc.perform(post("/signerCertificate/")
+        mockMvc.perform(post("/signerCertificate")
                 .content(payload)
                 .contentType("application/cms")
                 .header(dgcConfigProperties.getCertAuth().getHeaderFields().getThumbprint(), authCertHash)
@@ -202,7 +202,7 @@ class SignerCertificateIntegrationTest {
         String authCertHash =
             trustedPartyTestHelper.getHash(TrustedPartyEntity.CertificateType.AUTHENTICATION, countryCode);
 
-        mockMvc.perform(post("/signerCertificate/")
+        mockMvc.perform(post("/signerCertificate")
                 .content(payload)
                 .contentType("application/cms")
                 .header(dgcConfigProperties.getCertAuth().getHeaderFields().getThumbprint(), authCertHash)
@@ -241,7 +241,7 @@ class SignerCertificateIntegrationTest {
         String authCertHash =
             trustedPartyTestHelper.getHash(TrustedPartyEntity.CertificateType.AUTHENTICATION, countryCode);
 
-        mockMvc.perform(post("/signerCertificate/")
+        mockMvc.perform(post("/signerCertificate")
                 .content(payload)
                 .contentType("application/cms")
                 .header(dgcConfigProperties.getCertAuth().getHeaderFields().getThumbprint(), authCertHash)
@@ -280,7 +280,7 @@ class SignerCertificateIntegrationTest {
         String authCertHash =
             trustedPartyTestHelper.getHash(TrustedPartyEntity.CertificateType.AUTHENTICATION, countryCode);
 
-        mockMvc.perform(post("/signerCertificate/")
+        mockMvc.perform(post("/signerCertificate")
                 .content(payload)
                 .contentType("application/cms")
                 .header(dgcConfigProperties.getCertAuth().getHeaderFields().getThumbprint(), authCertHash)
@@ -319,7 +319,7 @@ class SignerCertificateIntegrationTest {
         String authCertHash =
             trustedPartyTestHelper.getHash(TrustedPartyEntity.CertificateType.AUTHENTICATION, countryCode);
 
-        mockMvc.perform(post("/signerCertificate/")
+        mockMvc.perform(post("/signerCertificate")
                 .content(payload)
                 .contentType("application/cms")
                 .header(dgcConfigProperties.getCertAuth().getHeaderFields().getThumbprint(), authCertHash)
@@ -360,7 +360,7 @@ class SignerCertificateIntegrationTest {
         String authCertHash =
             trustedPartyTestHelper.getHash(TrustedPartyEntity.CertificateType.AUTHENTICATION, countryCode);
 
-        mockMvc.perform(post("/signerCertificate/")
+        mockMvc.perform(post("/signerCertificate")
                 .content(payload)
                 .contentType("application/cms")
                 .header(dgcConfigProperties.getCertAuth().getHeaderFields().getThumbprint(), authCertHash)
