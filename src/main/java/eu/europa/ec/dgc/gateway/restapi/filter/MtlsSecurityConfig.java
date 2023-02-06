@@ -40,6 +40,10 @@ import org.springframework.security.web.authentication.preauth.x509.X509Principa
 @Slf4j
 public class MtlsSecurityConfig {
 
+    /**
+     * Configures Spring Security to check provided client certificate and add it to request parameters.
+     * Actual Authorization check will be done by {@link CertificateAuthenticationFilter}
+     */
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http

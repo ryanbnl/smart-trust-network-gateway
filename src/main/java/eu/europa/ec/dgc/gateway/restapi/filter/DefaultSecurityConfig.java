@@ -32,6 +32,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @Slf4j
 public class DefaultSecurityConfig {
 
+    /**
+     * Default Spring Security Config for requests secured via LoadBalancer in front of the Gateway.
+     */
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http
