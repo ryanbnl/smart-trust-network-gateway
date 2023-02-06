@@ -41,6 +41,7 @@ import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.Optional;
 import org.bouncycastle.cert.X509CertificateHolder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,11 @@ class SignerCertificateIntegrationTest {
 
     private static final String countryCode = "EU";
     private static final String authCertSubject = "C=" + countryCode;
+
+    @AfterEach
+    public void cleanUp() {
+        signerInformationRepository.deleteAll();
+    }
 
     @Test
     void testSuccessfulUpload() throws Exception {
