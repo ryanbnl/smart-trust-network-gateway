@@ -34,16 +34,11 @@
 
 This repository contains the source code of the DDCC Gateway.
 
-DGCG is used to share business rules, value sets, validation and verification information across all national backend servers. By using DDCCG,
-backend-to-backend integration is facilitated, and countries and regions can onboard incrementally, while the national backends
-retain flexibility and can control data processing of their users.
+DGCG is used to share business rules, value sets, validation and verification information across all national backend servers. By using DDCCG, backend-to-backend integration is facilitated, and countries and regions can onboard incrementally, while the national backends retain flexibility and can control data processing of their users.
 
 ## Development
 
-Please be aware that the provided configuration files contain passwords that do not conform to any reasonable password
-policies, hence under no circumstances should be applied to productive or even broader test environments.
-Passwords used in productive scenarios should be provided only at runtime and stored in safe place, with restricted and
-logged access.
+Please be aware that the provided configuration files contain passwords that do not conform to any reasonable password policies, hence under no circumstances should be applied to productive or even broader test environments. Passwords used in productive scenarios should be provided only at runtime and stored in safe place, with restricted and logged access.
 
 ### Prerequisites
 
@@ -55,21 +50,20 @@ logged access.
 
 #### Authenticating to GitHub Packages
 
-As some of the required libraries (and/or versions are pinned/available only from GitHub Packages) You need to
-authenticate
-to [GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry)
-The following steps need to be followed
+As some of the required libraries (and/or versions) are pinned/available only from GitHub Packages you will need to authenticate to [GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry).
 
-- Create [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with scopes:
+##### Create a Personal Access Token for Github
+
+- Create [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with scopes under [Personal Access Tokens (classic)]( (https://github.com/settings/tokens)):
   - `read:packages` for downloading packages
 
-##### GitHub Maven
+##### Configure Maven
 
-- Copy/Augment `~/.m2/settings.xml` with the contents of `settings.xml` present in this repository
+- Copy/Augment `~/.m2/settings.xml` (`%USERPROFILE%\.m2\settings.xml` for Windows users) with the contents of `settings.xml` present in this repository
   - Replace `${app.packages.username}` with your github username
   - Replace `${app.packages.password}` with the generated PAT
 
-##### GitHub Docker Registry
+##### Configure Docker Registry
 
 - Run `docker login docker.pkg.github.com/eu-digital-green-certificates` before running further docker commands.
   - Use your GitHub username as username
@@ -82,11 +76,9 @@ The following steps need to be followed
 
 ### Build
 
-Whether you cloned or downloaded the 'zipped' sources you will either find the sources in the chosen checkout-directory
-or get a zip file with the source code, which you can expand to a folder of your choice.
+Whether you cloned or downloaded the 'zipped' sources you will either find the sources in the chosen checkout-directory or get a zip file with the source code, which you can expand to a folder of your choice.
 
-In either case open a terminal pointing to the directory you put the sources in. The local build process is described
-afterwards depending on the way you choose.
+In either case open a terminal pointing to the directory you put the sources in. The local build process is described afterwards depending on the way you choose.
 
 #### Maven based build for Tomcat WAR-File
 
@@ -103,8 +95,7 @@ docker-compose build
 
 ### Start Local
 
-**Attention: This Repository contains simple passwords as placeholder. Please be aware that these passwords should not
-be used for production deployments of the gateway!**
+**Attention: This Repository contains simple passwords as placeholder. Please be aware that these passwords should not be used for production deployments of the gateway!**
 
 In order to start the gateway on your local computer you have to follow these steps:
 
@@ -115,8 +106,7 @@ In order to start the gateway on your local computer you have to follow these st
 
 #### Create TrustAnchor
 
-The TrustAnchor is used to sign TrustedParty entries in the DB. To validate these signatures the gateway needs to public
-key of the TrustAnchor.
+The TrustAnchor is used to sign TrustedParty entries in the DB. To validate these signatures the gateway needs to have the public key of the TrustAnchor. This public key will also be required by National Backends so that they can validate the signatures.
 
 To create a TrustAnchor you can execute the following OpenSSL command:
 
@@ -130,37 +120,29 @@ afterwards the PublicKey has to be exported in a Java KeyStore.
 keytool -importcert -alias dgcg_trust_anchor -file cert_ta.pem -keystore ta.jks -storepass dgcg-p4ssw0rd -storetype jks
 ```
 
-Put the created ta.jks file in the "certs" directory of dgc-gateway. If you are using the Docker image then this folder
-must
-be in the root directory of your local workspace (on the same level as this readme file). Create directory it does not
-already exist.
+Put the created `ta.jks` file in the `certs` directory of dgc-gateway. If you are using the Docker image then this folder must be in the root directory of your local workspace (on the same level as this readme file). Create directory it does not already exist.
 
 #### Create Database
 
-DGC Gateway needs a database to persist data. For local deployment a MySQL is recommended. A MySQL DB will be started
-when docker-compose file is started, so no additional tasks are required.
+DGC Gateway needs a database to persist data. For local deployment MySQL DB instance is recommended. A MySQL DB will be started when docker-compose file is started, so no additional tasks are required.
 
 #### Start Gateway
 
-To start the Gateway just start the docker-compose file. Please assure that the project was build for Docker build
-before.
+To start the Gateway just start the `docker-compose file. Please ensure that the project was built for Docker build before.
 
 ```
-docker-compose up --build
+docker compose up --build
 ```
 
 #### Common issues
 
 `ERROR: for dgc-gateway_dgc-gateway_1  Cannot create container for service dgc-gateway`
 
-This error occurs in Docker-for-Windows if Docker does not have access to the gateway folder. In Docker-for-Windows,
-go to `Settings > Resources > File Sharing` and add the root directory of the repository, then restart
-Docker-for-Windows.
+This error occurs in Docker-for-Windows if Docker does not have access to the gateway folder. In Docker-for-Windows, go to `Settings > Resources > File Sharing` and add the root directory of the repository, then restart Docker-for-Windows.
 
 #### Insert Trusted Parties
 
-The data structure in the database should be now be created by DGC Gateway. In order to access the DGC Gateway it is
-required to onboard some certificates. You will need AUTHENTICATION, UPLOAD and CSCA certificates.
+The data structure in the database should be now be created by DGC Gateway. In order to access the DGC Gateway it is required to onboard some certificates. You will need AUTHENTICATION, UPLOAD and CSCA certificates.
 
 The certificates can be created with OpenSSL:
 
@@ -178,13 +160,11 @@ dgc ta sign -c cert_ta.pem -k key_ta.pem -i cert_csca.pem
 dgc ta sign -c cert_ta.pem -k key_ta.pem -i cert_upload.pem
 ```
 
-Afterwards you can create a new entry in the `trusted_parties` table and fill all of the fields with the data produced
-by the above commands.
+Afterwards you can create a new entry in the `trusted_parties` table and fill all of the fields with the data produced by the above commands.
 
 ##### Inserting Trusted Parties into the Database
 
-Log on to the mysql container (using the docker commands or opening a shell with the docker UI) and open mysql cli like
-this:
+Log on to the mysql container (using the docker commands or opening a shell with the docker UI) and open mysql cli like this:
 
 ```
 mysql --user=root --password=admin dgc
@@ -298,24 +278,18 @@ NOTE: the url uses mixed cases; it's `trustList` not `trustlist`!
 
 If something goes wrong, the best place to look is in the logging.
 
-Docker users can read the logs by copying them to their machine; use `docker ps` to get the ID of the running containers
-and `docker cp [CONTAINER_ID]:/logs/dgcg.log .` to copy the log file to the current directory.
+Docker users can read the logs by copying them to their machine; use `docker ps` to get the ID of the running containers and `docker cp [CONTAINER_ID]:/logs/dgcg.log .` to copy the log file to the current directory.
 
 #### Send requests
 
-DGC Gateway does not do any mTLS termination. To simulate the LoadBalancer on your local deployment you have to send
-HTTP requests to the gateway and set two HTTP-Headers:
+DGC Gateway does not do any mTLS termination. To simulate the LoadBalancer on your local deployment you have to send HTTP requests to the gateway and set two HTTP-Headers:
 
-X-SSL-Client-SHA256: Containing the SHA-256 Hash of the AUTHENTICATION certificate (thumbprint from dgc ta command
-output)
-X-SSL-Client-DN: Containing the Distinguish Name (Subject) of the AUTHENTICATION certificate. (Must only contain Country
-Property, e.g. C=EU)
+`X-SSL-Client-SHA256`: Containing the SHA-256 Hash of the AUTHENTICATION certificate (thumbprint from `dgc ta` command output).
+`X-SSL-Client-DN`: Containing the Distinguish Name (Subject) of the AUTHENTICATION certificate (must only contain Country Property, e.g. `C=EU`).
 
 #### Coverting the certificate/private key into PKCS12
 
-Windows users may wish to convert their certificate/private keys into a PKCS12 package so that it can be imported into
-the
-machine's certificate store. Thankfully that is pretty simple using openssl.
+Windows users may wish to convert their certificate/private keys into a PKCS12 package so that it can be imported into the machine's certificate store. Thankfully that is pretty simple using openssl.
 
 For example to convert the test authentication certificate created earlier:
 
@@ -329,10 +303,7 @@ For example to convert the test authentication certificate created earlier:
 
 The latest OpenAPI specification can always be found here: https://eu-digital-green-certificates.github.io/dgc-gateway/
 
-It is also possible to access OpenAPI when DGC Gateway is deployed on your local computer when Spring-Profile "dev" or "
-local" is enabled. In order to set authentication headers for authentication without a mTLS terminating LoadBalancer at
-least the profile "local"
-should be enabled. Then both headers can be set in Swagger UI.
+It is also possible to access OpenAPI when DGC Gateway is deployed on your local computer when Spring-Profile "dev" or " local" is enabled. In order to set authentication headers for authentication without a mTLS terminating LoadBalancer at least the profile "local" should be enabled. Then both headers can be set in Swagger UI.
 
 http://localhost:8090/swagger-ui/index.html
 
@@ -354,29 +325,19 @@ The following channels are available for discussions, feedback, and support requ
 
 ## How to contribute
 
-Contribution and feedback is encouraged and always welcome. For more information about how to contribute, the project
-structure,
-as well as additional contribution information, see our [Contribution Guidelines](./CONTRIBUTING.md). By participating
-in this
-project, you agree to abide by its [Code of Conduct](./CODE_OF_CONDUCT.md) at all times.
+Contribution and feedback is encouraged and always welcome. For more information about how to contribute, the project structure, as well as additional contribution information, see our [Contribution Guidelines](./CONTRIBUTING.md). By participating in this project, you agree to abide by its [Code of Conduct](./CODE_OF_CONDUCT.md) at all times.
 
 ## Contributors
 
-Our commitment to open source means that we are enabling -in fact encouraging- all interested parties to contribute and
-become part of its developer community.
+Our commitment to open source means that we are enabling -in fact encouraging- all interested parties to contribute and become part of its developer community.
 
 #
 ## Licensing
 
 Copyright (C) 2021 - 2022 T-Systems International GmbH and all other contributors
 
-Licensed under the **Apache License, Version 2.0** (the "License"); you may not use this file except in compliance with
-the License.
+Licensed under the **Apache License, Version 2.0** (the "License"); you may not use this file except in compliance with the License.
 
 You may obtain a copy of the License at https://www.apache.org/licenses/LICENSE-2.0.
 
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "
-AS IS"
-BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the [LICENSE](./LICENSE) for the
-specific
-language governing permissions and limitations under the License.
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an " AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the [LICENSE](./LICENSE) for the specific language governing permissions and limitations under the License.
